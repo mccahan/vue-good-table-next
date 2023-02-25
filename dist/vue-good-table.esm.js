@@ -1,5 +1,5 @@
 /*!
-  * vue-good-table-next v0.2.1
+  * vue-good-table-next v0.2.2
   * (c) 2021-present Boris Flesch <boris@singlequote.net>
   * (c) 2017-2021 xaksis <shay@crayonbits.com>
   * @license MIT
@@ -8443,7 +8443,7 @@ const _sfc_main = {
 				return {
 					enabled: false,
 					selectionInfoClass: "",
-					selectionText: "rows selected",
+					selectionText: n => n + ' row' + (n !== 1 ? 's' : '') + ' selected',
 					clearSelectionText: "clear",
 					disableSelectInfo: false,
 					selectAllByGroup: false,
@@ -8519,7 +8519,7 @@ const _sfc_main = {
 		selectAllByPage: true,
 		disableSelectInfo: false,
 		selectionInfoClass: "",
-		selectionText: "rows selected",
+		selectionText: n => n + ' row' + (n !== 1 ? 's' : '') + ' selected',
 		clearSelectionText: "clear",
 		alwaysShowSelectionInfo: false,
 
@@ -8705,7 +8705,11 @@ const _sfc_main = {
 		},
 
 		selectionInfo() {
-			return `${this.selectedRowCount} ${this.selectionText}`;
+			if (typeof this.selectionText == 'function') {
+				return this.selectionText(this.selectedRowCount);
+			} else {
+				return `${this.selectedRowCount} ${this.selectionText}`;
+			}
 		},
 
 		selectedRowCount() {
@@ -9796,12 +9800,12 @@ const _sfc_main = {
 				this.selectionInfoClass = selectionInfoClass;
 			}
 
-			if (typeof alwaysShowSelectionInfo === "boolean") {
-				this.alwaysShowSelectionInfo = alwaysShowSelectionInfo;
-			}
-
-			if (typeof selectionText === "string") {
+			if (typeof selectionText === "string" || typeof selectionText === "function") {
 				this.selectionText = selectionText;
+			}
+      
+      if (typeof alwaysShowSelectionInfo === "boolean") {
+				this.alwaysShowSelectionInfo = alwaysShowSelectionInfo;
 			}
 
 			if (typeof clearSelectionText === "string") {
